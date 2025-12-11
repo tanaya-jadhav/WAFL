@@ -1,0 +1,140 @@
+# sv filtering workflow in snakemake - Tanaya Jadhav
+# Run in conda environment snv_indel_snakemake
+# To make new conda environment use environment.yaml
+# To generate a DAG run: snakemake --dag | dot -Tsvg > dag.svg
+# from glob import glob
+
+configfile: "config.yaml"
+
+# Define the main rule
+rule all:
+    input:  expand("output/{sample}/{sample}.FilteredSVs.vcf", sample=config["Sample"])
+
+# annotate with gnomad, 1000 genomes, and other public data allele frequencies
+rule svafotate_annotate:
+	input:
+		vcf=config["SV_vcf"]
+	output:
+		annotatedvcf="output/{sample}/{sample}.svafotate.vcf"
+	params:
+		svafotate_bed=config["svafotate_bed"]
+	resources:
+        	mem=config["svafotate_mem"]
+	threads:
+        	config["cpu"]
+	shell:
+		"""
+		svafotate annotate \
+		-v {input.vcf} \
+		-o {output.annotatedvcf} \
+		-b {params.svafotate_bed} \
+		-f 0.5 -a best
+		"""
+
+rule svafotate_platformcontrolannotation:
+    input:
+        vcf="output/{sample}/{sample}.svafotate.vcf"
+    output:
+        out_vcf="output/{sample}/{sample}.svafotate.withplatformcontrols.vcf"
+    params:
+        svafotatecontrols_bed=config["svafotatecontrols_bed"]
+    shell:
+        """
+        svafotate annotate \
+        -v {input.vcf} \
+        -o {output.out_vcf} \
+        -b {params.svafotatecontrols_bed} \
+        -f 0.5 -a best
+        """
+
+# # annotate with svpack
+# rule svpack_annotate:
+# 	input:
+# 		SVPACK_input_VCF="output/{sample}/{sample}.svafotate.vcf"
+# 	output:
+# 		SVPACK_output_VCF="output/{sample}/{sample}.svafotate.svpack.vcf"
+# 	params:
+# 		svpack_gff=config["svpack_gff"],
+# 		svpack_script=config["svpack_script"]
+# 	resources:
+#         	mem_mb=config["memory"]
+# 	threads:
+# 		config["cpu"]
+# 	shell:
+# 		"""
+# 		{params.svpack_script} consequence \
+# 		{input.SVPACK_input_VCF} \
+# 		{params.svpack_gff} > {output.SVPACK_output_VCF}
+# 		"""
+
+# annotate with vep
+rule vep_annotate:
+    input:
+        VEP_input_VCF="output/{sample}/{sample}.svafotate.withplatformcontrols.vcf"
+    output:
+        VEP_output_VCF="output/{sample}/{sample}.svafotate.vep.vcf"
+    params:
+        refseq_cache_dir=config["refseq_cache_dir"],
+        revel_archive=config["revel_archive"],
+        lof_archive=config["lof_archive"],
+        cadd_svarchive=config["cadd_svarchive"],
+        hprc_pbsv_archive=config["hprc_pbsv_archive"],
+        hg38_ref=config["hg38_ref"],
+        colorsdb_archive=config["colorsdb_archive"]
+    log:
+        "output/{sample}/{sample}.vep.log"
+    container:
+        config["VEP_container"]
+    resources:
+        mem_mb=config["vep_mem"]
+    threads:
+        config["vep_cpu"]
+    shell:
+        """
+        vep \
+        --verbose \
+        --no_stats \
+        --offline \
+        --dir {params.refseq_cache_dir} \
+        --cache_version 112 \
+        --species homo_sapiens \
+        --assembly GRCh38 \
+        --force_overwrite \
+        --fork 16 \
+        --buffer_size 20000 \
+        --vcf \
+        --refseq \
+        --fasta {params.hg38_ref} \
+        --exclude_predicted \
+        --distance 0 \
+        --minimal \
+        --allele_number \
+        --hgvs \
+        -o {output.VEP_output_VCF} \
+        -i {input.VEP_input_VCF} \
+        --plugin REVEL,{params.revel_archive} \
+        --plugin LoFtool,{params.lof_archive} \
+        --plugin CADD,sv={params.cadd_svarchive}
+        """
+
+rule filter_SVs:
+    input:
+        input_VCF="output/{sample}/{sample}.svafotate.vep.vcf"
+    output:
+        output_VCF="output/{sample}/{sample}.FilteredSVs.vcf"
+    params:
+        gnomad_cutoff=config["gnomad_cutoff"],
+        hprc_cutoff=config["hprc_cutoff"],
+        colorsdb_cutoff=config["colorsdb_cutoff"],
+        cdls_cutoff=config["cdls_cutoff"]
+    shell:
+        """
+        ./workflow_scripts/filterSVs.py \
+        -in_vcf {input.input_VCF} \
+        -gnomad_cutoff {params.gnomad_cutoff} \
+        -hprc_cutoff {params.hprc_cutoff} \
+        -colorsdb_cutoff {params.colorsdb_cutoff} \
+        -cdls_cutoff {params.cdls_cutoff} \
+        -o {output.output_VCF}
+        """
+
