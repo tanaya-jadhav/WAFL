@@ -47,26 +47,6 @@ rule svafotate_platformcontrolannotation:
         -f 0.5 -a best
         """
 
-# # annotate with svpack
-# rule svpack_annotate:
-# 	input:
-# 		SVPACK_input_VCF="output/{sample}/{sample}.svafotate.vcf"
-# 	output:
-# 		SVPACK_output_VCF="output/{sample}/{sample}.svafotate.svpack.vcf"
-# 	params:
-# 		svpack_gff=config["svpack_gff"],
-# 		svpack_script=config["svpack_script"]
-# 	resources:
-#         	mem_mb=config["memory"]
-# 	threads:
-# 		config["cpu"]
-# 	shell:
-# 		"""
-# 		{params.svpack_script} consequence \
-# 		{input.SVPACK_input_VCF} \
-# 		{params.svpack_gff} > {output.SVPACK_output_VCF}
-# 		"""
-
 # annotate with vep
 rule vep_annotate:
     input:
