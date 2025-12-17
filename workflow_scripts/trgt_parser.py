@@ -23,6 +23,8 @@ def main():
     # load repeat database tsv
     repeatdf = pd.read_csv(repeatsdb, sep='\t', header=0)
     repeatdf = repeatdf.fillna('')
+    repeat_geneslist = list(repeatdf['g_symbol'])
+    # print(repeat_geneslist)
 
     # load sample vcf file
     with open(trgt_vcf, "r") as i:
@@ -41,11 +43,18 @@ def main():
 
     with open(out_tsv, 'w') as o:
         o.write('Gene\tHaplotype_copies\tPathogenicity_Threshold\tPotentially_Pathogenic_Motif\tMotifs\tStructure\t'
-                'Motif_Copies\tMotif_Support\tPotentially_Pathogenic\tDiseaseName\tDiseaseAlias\tDiseaseInheritance\t'
+                'Motif_Copies\tMotif_Support\tPotentially_Pathogenic\tgene_repeatDB\tDiseaseName\tDiseaseAlias\tDiseaseInheritance\t'
                 'DiseaseEvidence\n')
         for i, r in vcf_df.iterrows():
             gene = r['TRID']
-            subdf = repeatdf[repeatdf['g_symbol'] == gene]
+            goi = [g for g in repeat_geneslist if g in gene]
+            if len(goi) >= 2:
+                repeat_gsymbol = max(goi, key=len)
+            elif len(goi) == 1:
+                repeat_gsymbol = goi[0]
+            else:
+                repeat_gsymbol = ''
+            subdf = repeatdf[repeatdf['g_symbol'] == repeat_gsymbol]
             if len(subdf) >= 1:
                 disease = list(subdf['d_name'])[0]
                 disease_alias = list(subdf['d_name_alias'])[0]
@@ -71,19 +80,13 @@ def main():
                 if any(x > path_threshold for x in path_repeats):
                     o.write(gene + '\t' + str(path_repeats) + '\t' + str(path_threshold)
                             + '\t' + pathogenic_motif + '\t' + r['MOTIFS'] + '\t' + r['STRUC'] + '\t' + r['MC'] + '\t'
-                            + r['SD'] + '\t' + 'yes' + '\t' + disease + '\t' + disease_alias +
+                            + r['SD'] + '\t' + 'yes' + '\t' + repeat_gsymbol + '\t' + disease + '\t' + disease_alias +
                             '\t' + disease_inheritance + '\t' + disease_evidence + '\n')
                 else:
                     o.write(gene + '\t' + str(path_repeats) + '\t' + str(path_threshold)
-                            + '\t' + pathogenic_motif + '\t' + str(r['MOTIFS']) + '\t' + str(r['STRUC']) + '\t' +
-                            str(r['MC']) + '\t' + str(r['SD']) + '\t' + 'no' + '\t' + disease + '\t' + disease_alias +
+                            + '\t' + pathogenic_motif + '\t' + r['MOTIFS'] + '\t' + r['STRUC'] + '\t' + r['MC'] + '\t'
+                            + r['SD'] + '\t' + 'no' + '\t' + repeat_gsymbol + '\t' + disease + '\t' + disease_alias +
                             '\t' + disease_inheritance + '\t' + disease_evidence + '\n')
-
-
-if __name__ == '__main__':
-    main()
-
-
 
 
 if __name__ == '__main__':

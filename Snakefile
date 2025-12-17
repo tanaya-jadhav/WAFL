@@ -210,6 +210,11 @@ rule rank_variants:
         Rank_output_Features="output/{sample}/{sample}.Features.tsv",
         Rank_output_Dominant="output/{sample}/{sample}.DominantVariants.tsv",
         Rank_output_Recessive="output/{sample}/{sample}.RecessiveVariants.tsv"
+    params:
+        loeuf_file=config["loeuf_file"],
+        morbidgenes_file=config["morbidgenes_file"],
+        gencc_file=config["gencc_file"],
+        regionalconstraint_file=config["regionalconstraint_file"]
     resources:
         mem_mb=config["memory"]
     threads:
@@ -220,6 +225,10 @@ rule rank_variants:
         -InVCF {input.Rank_input_VCF} \
         -ped {input.Rank_input_PED} \
         -proband {wildcards.sample} \
+        -loeuf {params.loeuf_file} \
+        -morbidgenes {params.morbidgenes_file} \
+        -gencc {params.gencc_file} \
+        -regconst {params.regionalconstraint_file} \
         -OutDir output/{wildcards.sample}/
         """
 
@@ -292,6 +301,9 @@ rule SV_SNV_comphets:
         -sv {input.SV_file} \
         -snv {input.SNV_file} \
         -o {output.OUT_tsv} \
+        -loeuf {params.loeuf_file} \
+        -morbidgenes {params.morbidgenes_file} \
+        -gencc {params.gencc_file} \
         -proband {wildcards.sample} \
         -ped {input.input_PED}
         """

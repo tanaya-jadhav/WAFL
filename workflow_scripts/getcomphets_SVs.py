@@ -62,7 +62,7 @@ def get_comphetvars(sv_df, snv_df, out_file):
     sv_df = sv_df[sv_df['Gene'].isin(common_genes)]
     snv_df = snv_df[snv_df['Gene'].isin(common_genes)]
     combineddf = pd.concat([sv_df, snv_df], axis=0, ignore_index=True)
-    combineddf = combineddf.sort_values(by=['Gene', 'POS'])
+    combineddf = combineddf.sort_values(by=['GenCC_Submission', 'Gene', 'POS'])
     combineddf.to_csv(out_file, sep='\t', index=False)
 
 
@@ -79,6 +79,12 @@ def main():
                         help='ID of proband')
     group1.add_argument('-ped', type=str, dest='ped', required=True,
                         help='Input pedigree file')
+    group1.add_argument('-loeuf', type=str, dest='loeuf', required=True,
+                        help='TSV file with precomputed loeuf scores')
+    group1.add_argument('-morbidgenes', type=str, dest='morbidgenes', required=True,
+                        help='Morbid genes list')
+    group1.add_argument('-gencc', type=str, dest='gencc', required=True,
+                        help='TSV file of GenCC submissions')
 
     args = parser.parse_args()
 
@@ -87,13 +93,13 @@ def main():
     out_file = args.out_file
     proband_ID = args.proband_ID
     ped = args.ped
+    loeuf = args.loeuf
+    morbidgenes = args.morbidgenes
+    gencc = args.gencc
 
-    loeuf_file = '/mnt/isilon/rajagopalan_lab/projects/snv_indel_workflow/workingdir/referencefiles/gnomad.v4.1.constraint_metrics.filtered.tsv'
-    loeuf_df = pd.read_csv(loeuf_file, sep='\t', header=0)
-    morbidgenes_file = '/mnt/isilon/rajagopalan_lab/projects/snv_indel_workflow/workingdir/referencefiles/morbidmap.genes.txt'
-    morbidgenes_df = pd.read_csv(morbidgenes_file, sep='\t', header=None, names=['gene', 'Morbid_Gene'])
-    gencc_file = '/mnt/isilon/rajagopalan_lab/projects/snv_indel_workflow/workingdir/referencefiles/gencc_submissions_processed.tsv'
-    gencc_df = pd.read_csv(gencc_file, sep='\t', header=0)
+    loeuf_df = pd.read_csv(loeuf, sep='\t', header=0)
+    morbidgenes_df = pd.read_csv(morbidgenes, sep='\t', header=None, names=['gene', 'Morbid_Gene'])
+    gencc_df = pd.read_csv(gencc, sep='\t', header=0)
 
     # parse ped file
     proband, father, mother = read_pedfile(ped, proband_ID)
@@ -163,6 +169,12 @@ def main():
 
     # determine if parent samples are present in sv vcf
     snv_df = check_for_parents(snv_df, snv_headerline, father, mother)
+
+    # filter out genes in curated noisy genes list:
+    # MUC (mucin) genes
+    muc_pattern = r"MUC\d+"
+    sv_df = sv_df[~sv_df['Gene'].str.contains(muc_pattern, regex=True, na=False)]
+    snv_df = snv_df[~snv_df['Gene'].str.contains(muc_pattern, regex=True, na=False)]
 
     # tag compound heterozygous variants
     get_comphetvars(sv_df, snv_df, out_file)

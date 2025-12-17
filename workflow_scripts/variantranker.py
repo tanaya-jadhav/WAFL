@@ -302,8 +302,13 @@ def main(in_vcf, pedfile, proband_ID, outdir, loeuf_file, morbidgenes_file, genc
                                        (recessive_df['CADD_PHRED'] >= 10)), recessive_df.columns.get_loc('retain')] = 1
     # utr-annotator for promoter variant
 
+    # filter out genes in curated noisy genes list:
+    # MUC (mucin) genes
+    muc_pattern = r"MUC\d+"
+    recessive_df = recessive_df[~recessive_df['Gene'].str.contains(muc_pattern, regex=True, na=False)]
 
     retain_df = recessive_df[recessive_df['retain'] == 1]
+    retain_df = retain_df.sort_values(by=['GenCC_Submission', 'Gene', 'POS'])
     retain_df.to_csv(outdir + proband_ID + '.RecessiveVariants.tsv', sep='\t', index=False)
 
 
@@ -319,17 +324,23 @@ if __name__ == '__main__':
                         help='ID of proband')
     group1.add_argument('-OutDir', type=str, dest='outdir', required=True,
                         help='output dir for output files')
+    group1.add_argument('-loeuf', type=str, dest='loeuf', required=True,
+                        help='TSV file with precomputed loeuf scores')
+    group1.add_argument('-morbidgenes', type=str, dest='morbidgenes', required=True,
+                        help='Morbid genes list')
+    group1.add_argument('-gencc', type=str, dest='gencc', required=True,
+                        help='TSV file of GenCC submissions')
+    group1.add_argument('-regconst', type=str, dest='regconst', required=True,
+                        help='TSV file with regional missense constraint scores from gnomad')
 
     args = parser.parse_args()
     in_vcf = args.in_vcf
     ped = args.ped
     proband_ID = args.proband_ID
     outdir = args.outdir
+    loeuf = args.loeuf
+    morbidgenes = args.morbidgenes
+    gencc = args.gencc
+    regconst = args.regconst
 
-    # resource files: Only change if these files are moved
-    loeuf_file = '/mnt/isilon/rajagopalan_lab/projects/snv_indel_workflow/workingdir/referencefiles/gnomad.v4.1.constraint_metrics.filtered.tsv'
-    morbidgenes_file = '/mnt/isilon/rajagopalan_lab/projects/snv_indel_workflow/workingdir/referencefiles/morbidmap.genes.txt'
-    gencc_file = '/mnt/isilon/rajagopalan_lab/projects/snv_indel_workflow/workingdir/referencefiles/gencc_submissions_processed.tsv'
-    regionalconstraint_file = '/mnt/isilon/rajagopalan_lab/projects/snv_indel_workflow/workingdir/referencefiles/Hg38liftover_gnomAD_v2.1.1_transcripts_with_rmc.tsv'
-
-    main(in_vcf, ped, proband_ID, outdir, loeuf_file, morbidgenes_file, gencc_file, regionalconstraint_file)
+    main(in_vcf, ped, proband_ID, outdir, loeuf, morbidgenes, gencc, regconst)
