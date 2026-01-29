@@ -17,7 +17,6 @@ SVDB_container: "shub://J35P312/SVDB"
 ECHTVAR_container: "docker://pgc-images.sbgenomics.com/d3b-bixu/echtvar:0.2.0"
 VEP_container: "docker://ensemblorg/ensembl-vep"
 SLIVAR_container: "docker://brentp/slivar"
-TREXS_container: "docker://kpinpb/trexs:latest"
 # annotation files
 hg38_ref: "Path to Hg38 Fasta File"
 HPRC_database: "hprc_deepvariant_db.vcf.gz"
@@ -27,23 +26,21 @@ hprc_archive: "resources/pbhprc.echtvar.zip"
 refseq_gtf: "resources/RefSeqAnnotation/GCF_000001405.40_GRCh38.p14_genomic.chr_replaced.gtf"
 refseq_bed: "resources/RefSeqAnnotation/GCF_000001405.40_GRCh38.p14_genomic.chr_replaced.bed"
 refseq_genes_bed: "resources/RefSeqAnnotation/GCF_000001405.40_GRCh38.p14_genomic.chr_replaced.genes.bed"
-refseq_cache_dir: "resources/VEP_cachedir"
-spliceAI_snvarchive: "resources/SpliceAI/spliceai_scores.raw.snv.hg38.vcf.gz"
-spliceAI_indelarchive: "resources/SpliceAI/spliceai_scores.raw.indel.hg38.vcf.gz"
-revel_archive: "resources/Revel/new_tabbed_revel_grch38.tsv.gz"
-lof_archive: "resources/LoFtool_scores.txt"
-cadd_snvarchive: "resources/CADD_annotations/whole_genome_SNVs.tsv.gz"
-cadd_indelarchive: "resources/CADD_annotations/gnomad.genomes.r3.0.indel.tsv.gz"
-cadd_svarchive: "resources/CADD_annotations/1000G_phase3_SVs.tsv.gz"
+refseq_cache_dir: "Path to VEP cache dir" # Download the appropriate cache from https://ftp.ensembl.org/pub/release-112/variation/indexed_vep_cache/
+spliceAI_snvarchive: "Path to SpliceAI raw SNV scores vcf file" # Follow instructions for download at http://useast.ensembl.org/info/docs/tools/vep/script/vep_plugins.html
+spliceAI_indelarchive: "Path to SpliceAI raw indel scores vcf file" # Follow instructions for download at http://useast.ensembl.org/info/docs/tools/vep/script/vep_plugins.html
+revel_archive: "Path to new_tabbed_revel_grch38.tsv.gz file" # Follow instructions for download at http://useast.ensembl.org/info/docs/tools/vep/script/vep_plugins.html
+lof_archive: "Path to LoFtool_scores.txt file" # Follow instructions for download at http://useast.ensembl.org/info/docs/tools/vep/script/vep_plugins.html
+cadd_snvarchive: "Path to whole_genome_SNVs.tsv.gz file" # Follow instructions for download at http://useast.ensembl.org/info/docs/tools/vep/script/vep_plugins.html
+cadd_indelarchive: "Path to gnomad.genomes.r3.0.indel.tsv.gz file" # Follow instructions for download at http://useast.ensembl.org/info/docs/tools/vep/script/vep_plugins.html
+cadd_svarchive: "Path to 1000G_phase3_SVs.tsv.gz file" # Follow instructions for download at http://useast.ensembl.org/info/docs/tools/vep/script/vep_plugins.html
 clinvar_processed: "resources/clinvar_normalized_lab_counts.vcf.gz"
 csq_script: "resources/csq.js"
 loeuf_file: "resources/gnomad.v4.1.constraint_metrics.filtered.tsv"
-morbidgenes_file: "resources/morbidmap.genes.txt"
-gencc_file: "resources/gencc_submissions_processed.tsv"
+morbidgenes_file: "resources/morbidgenes.txt"
+gencc_file: "resources/gencc_submissions_processed.tsv" # Download updated tsv file from https://search.thegencc.org/download
 regionalconstraint_file: "resources/Hg38liftover_gnomAD_v2.1.1_transcripts_with_rmc.tsv"
-svpack_script: "resources/svpack.txt"
-svpack_gff: "resources/ensembl.GRCh38.101.reformatted.gff3.gz"
-svafotate_bed: "resources/SVAFotate_core_SV_popAFs.GRCh38.v4.1.bed.gz"
+svafotate_bed: "resources/SVAFotate_core_SV_popAFs.GRCh38.v4.1.bed.gz" # Download from https://zenodo.org/records/11642574
 svafotatecontrols_bed: "resources/pacbio_platformcontrol_annotations.bed"
 cpg_island_regions: "resources/cpgIslandExt.sorted.hg38.tsv"
 controlmethylationprofile: "resources/hprcprofile_imprintedgenes.tsv"
