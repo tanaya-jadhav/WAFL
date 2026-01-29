@@ -8,12 +8,10 @@ trgt_vcf: ""
 # filtering thresholds for SNVs and Indels
 gnomad_popmax_af_threshold: 0.005
 hprc_FRQ_threshold: 0.005
-rimgc_FRQ_threshold: 0.005
 # filtering thresholds for SVs
 gnomad_cutoff: 0.005
 hprc_cutoff: 0.005
 colorsdb_cutoff: 0.005
-cdls_cutoff: 0.05
 # tool containers
 SVDB_container: "shub://J35P312/SVDB"
 ECHTVAR_container: "docker://pgc-images.sbgenomics.com/d3b-bixu/echtvar:0.2.0"
@@ -23,12 +21,9 @@ TREXS_container: "docker://kpinpb/trexs:latest"
 # annotation files
 hg38_ref: "Path to Hg38 Fasta File"
 HPRC_database: "hprc_deepvariant_db.vcf.gz"
-RIMGC_database: "RIMGC_pbdeepvariant_db.db"
 gnomad_archive: "/mnt/isilon/rajagopalan_lab/reference/gnomad.v3.1.2.echtvar.v2.zip"
 clinvar_archive: "resources/clinvar.echtvar.zip"
 hprc_archive: "resources/pbhprc.echtvar.zip"
-rimgc_archive: "resources/rimgc.echtvar.zip"
-hgmd_archive: "resources/hgmd.echtvar.zip"
 refseq_gtf: "resources/RefSeqAnnotation/GCF_000001405.40_GRCh38.p14_genomic.chr_replaced.gtf"
 refseq_bed: "resources/RefSeqAnnotation/GCF_000001405.40_GRCh38.p14_genomic.chr_replaced.bed"
 refseq_genes_bed: "resources/RefSeqAnnotation/GCF_000001405.40_GRCh38.p14_genomic.chr_replaced.genes.bed"
@@ -41,7 +36,6 @@ cadd_snvarchive: "resources/CADD_annotations/whole_genome_SNVs.tsv.gz"
 cadd_indelarchive: "resources/CADD_annotations/gnomad.genomes.r3.0.indel.tsv.gz"
 cadd_svarchive: "resources/CADD_annotations/1000G_phase3_SVs.tsv.gz"
 clinvar_processed: "resources/clinvar_normalized_lab_counts.vcf.gz"
-hgmd_processed: "resources/hgmd_processed.vcf.gz"
 csq_script: "resources/csq.js"
 loeuf_file: "resources/gnomad.v4.1.constraint_metrics.filtered.tsv"
 morbidgenes_file: "resources/morbidmap.genes.txt"
@@ -50,9 +44,7 @@ regionalconstraint_file: "resources/Hg38liftover_gnomAD_v2.1.1_transcripts_with_
 svpack_script: "resources/svpack.txt"
 svpack_gff: "resources/ensembl.GRCh38.101.reformatted.gff3.gz"
 svafotate_bed: "resources/SVAFotate_core_SV_popAFs.GRCh38.v4.1.bed.gz"
-svafotatecontrols_bed: "resources/internal_control_annotations.bed"
-hprc_pbsv_archive: "resources/hprc.GRCh38.pbsv.vcf.gz"
-colorsdb_archive: "/mnt/isilon/rajagopalan_lab/reference/CoLoRSdb.GRCh38.v1.0.0.pbsv.jasmine.vcf.gz"
+svafotatecontrols_bed: "resources/pacbio_platformcontrol_annotations.bed"
 cpg_island_regions: "resources/cpgIslandExt.sorted.hg38.tsv"
 controlmethylationprofile: "resources/hprcprofile_imprintedgenes.tsv"
 imprintedgenesbed: "resources/imprinted_genes.bed"

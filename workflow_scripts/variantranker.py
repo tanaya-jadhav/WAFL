@@ -65,9 +65,6 @@ def createfeaturedf(proband_ID, in_df, sampletype, outdir, loeuf_df, morbidgenes
     in_df['HGVSp'] = in_df['CSQ'].str.split('|').str[11]
     in_df['gnomad_popmax_af'] = in_df['INFO'].str.split('gnomad_popmax_af=').str[1].str.split(';').str[0]
     in_df['hprc_FRQ'] = in_df['INFO'].str.split('hprc_FRQ=').str[1].str.split(';').str[0]
-    in_df['rimgc_FRQ'] = in_df['INFO'].str.split('rimgc_FRQ=').str[1].str.split(';').str[0]
-    in_df['Hgmd_class'] = in_df['INFO'].str.split('HGVS_CLASS=').str[1].str.split(';').str[0]
-    in_df['Hgmd_rankscore'] = in_df['INFO'].str.split('HGMD_RANKSCORE=').str[1].str.split(';').str[0]
     in_df['CLNSIG'] = in_df['INFO'].str.split('CLNSIG=').str[1].str.split(';').str[0]
     in_df['CLNDN'] = in_df['INFO'].str.split('CLNDN=').str[1].str.split(';').str[0]
     in_df['CompHet'] = np.where(in_df['INFO'].str.contains('Compound_Heterozygous'), 1, 0)
@@ -123,24 +120,24 @@ def createfeaturedf(proband_ID, in_df, sampletype, outdir, loeuf_df, morbidgenes
     if sampletype == 'trio':
         feature_df = in_df[['CHROM', 'POS', 'ID', 'REF', 'ALT', 'Proband_GT', 'Gene', 'Consequence', 'Impact',
                             'Highest_Impact_Order', 'HGVSc',
-                            'HGVSp', 'gnomad_popmax_af', 'Hgmd_class', 'Hgmd_rankscore', 'CLNSIG', 'CLNDN', 'CompHet',
+                            'HGVSp', 'gnomad_popmax_af', 'CLNSIG', 'CLNDN', 'CompHet',
                             'Homozygous', 'Denovo', 'Dad_GT', 'Mom_GT', 'Revel', 'LoFtool', 'Loeuf_score', 'regional_missense_constraint',
                             'SpliceAI_maxscore', 'SpliceAI_maxtype', 'CADD_PHRED', 'CADD_RAW', 'Morbid_Gene', 'GenCC_Submission',
-                            'Clinvar_path', 'Clinvar_benign', 'Clinvar_vus', 'gnomad_popmax_af', 'hprc_FRQ', 'rimgc_FRQ']]
+                            'Clinvar_path', 'Clinvar_benign', 'Clinvar_vus', 'gnomad_popmax_af', 'hprc_FRQ']]
     elif (sampletype == 'duo_dad') | (sampletype == 'duo_mom'):
         feature_df = in_df[['CHROM', 'POS', 'ID', 'REF', 'ALT', 'Proband_GT', 'Gene', 'Consequence', 'Impact',
                             'Highest_Impact_Order', 'HGVSc',
-                            'HGVSp', 'gnomad_popmax_af', 'Hgmd_class', 'Hgmd_rankscore', 'CLNSIG', 'CLNDN', 'CompHet',
+                            'HGVSp', 'gnomad_popmax_af', 'CLNSIG', 'CLNDN', 'CompHet',
                             'Homozygous', 'Denovo', 'Parent_GT', 'Revel', 'LoFtool', 'Loeuf_score', 'regional_missense_constraint', 'SpliceAI_maxscore',
                             'SpliceAI_maxtype', 'CADD_PHRED', 'CADD_RAW', 'Morbid_Gene', 'GenCC_Submission', 'Clinvar_path',
-                            'Clinvar_benign', 'Clinvar_vus', 'gnomad_popmax_af', 'hprc_FRQ', 'rimgc_FRQ']]
+                            'Clinvar_benign', 'Clinvar_vus', 'gnomad_popmax_af', 'hprc_FRQ']]
     else:
         feature_df = in_df[['CHROM', 'POS', 'ID', 'REF', 'ALT', 'Proband_GT', 'Gene', 'Consequence', 'Impact',
                             'Highest_Impact_Order', 'HGVSc',
-                            'HGVSp', 'gnomad_popmax_af', 'Hgmd_class', 'Hgmd_rankscore', 'CLNSIG', 'CLNDN', 'CompHet',
+                            'HGVSp', 'gnomad_popmax_af', 'CLNSIG', 'CLNDN', 'CompHet',
                             'Homozygous', 'Denovo', 'Revel', 'LoFtool', 'Loeuf_score', 'regional_missense_constraint', 'SpliceAI_maxscore',
                             'SpliceAI_maxtype', 'CADD_PHRED', 'CADD_RAW', 'Morbid_Gene', 'GenCC_Submission', 'Clinvar_path',
-                            'Clinvar_benign', 'Clinvar_vus', 'gnomad_popmax_af', 'hprc_FRQ', 'rimgc_FRQ']]
+                            'Clinvar_benign', 'Clinvar_vus', 'gnomad_popmax_af', 'hprc_FRQ']]
     feature_df['LoFtool'] = feature_df.LoFtool.replace('', 0, regex=True).astype(float)
     feature_df['SpliceAI_maxscore'] = feature_df.SpliceAI_maxscore.replace('', 0, regex=True).astype(float)
     feature_df['Revel'] = feature_df.Revel.replace('', 0, regex=True).astype(float)
@@ -151,11 +148,6 @@ def createfeaturedf(proband_ID, in_df, sampletype, outdir, loeuf_df, morbidgenes
              feature_df['CLNSIG'].isin(['Uncertain_significance', 'Conflicting_classifications_of_pathogenicity'])]
     clinvar_values = [3, 2, 1]
     feature_df['Clinvar_sig'] = np.select(clinvar_conds, clinvar_values, default=0)
-
-    hgmd_conds = [feature_df['Hgmd_class'].isin(['DM']),
-                     feature_df['Hgmd_class'].isin(['DM?'])]
-    hgmd_values = [2, 1]
-    feature_df['hgmd_class'] = np.select(hgmd_conds, hgmd_values, default=0)
 
     impact_conds = [feature_df['Impact'].isin(['HIGH']),
                     feature_df['Impact'].isin(['MODERATE']),
@@ -212,7 +204,7 @@ def main(in_vcf, pedfile, proband_ID, outdir, loeuf_file, morbidgenes_file, genc
 
     # get features in dataframe
     feature_df = createfeaturedf(proband_ID, in_df, sampletype, outdir, loeuf_df, morbidgenes_df, gencc_df, regionalconstraint_df)
-    print(feature_df.shape, feature_df.head(5))
+    # print(feature_df.shape, feature_df.head(5))
 
     # separate by dominant and recessive
     recessive_df = feature_df[(feature_df['CompHet'] == 1) | (feature_df['Homozygous'] == 1)]
@@ -230,9 +222,9 @@ def main(in_vcf, pedfile, proband_ID, outdir, loeuf_file, morbidgenes_file, genc
 
     # Scoring dominant variants
     # Variant gets a higher score if it is denovo, is in a LoF gene (continuous linear scale), is predicted to affect splicing
-    # Scoring is boosted if it is annotated P/LP/VUS in CLinvar and DM in hgmd and in the morbid genes list
+    # Scoring is boosted if it is annotated P/LP/VUS in CLinvar and in the morbid genes list
     dominant_df['D_score'] = 2 * feature_df['Denovo'] + (1 - feature_df['Loeuf_score']) * feature_df['SpliceAI_maxscore'] + \
-                             10 * feature_df['Clinvar_sig'] * feature_df['hgmd_class'] * (feature_df['Morbid_Gene']*2) + \
+                             10 * feature_df['Clinvar_sig'] * (feature_df['Morbid_Gene']*2) + \
                              feature_df['Impact_significance'] * (feature_df['Revel'] + feature_df['CADD_PHRED'])
 
     # Tag variants for prioritization
@@ -256,8 +248,9 @@ def main(in_vcf, pedfile, proband_ID, outdir, loeuf_file, morbidgenes_file, genc
             for i, r in gene_df_pathvars.iterrows():
                 phase = r['Proband_GT']
                 if (phase != '1/0') & (phase != '0/1'):  # if phased, only retain variants in trans with path variant
+                    # print(recessive_df.head(5))
                     recessive_df.iloc[(recessive_df['Gene'] == gene) & (recessive_df['Proband_GT'] != phase), recessive_df.columns.get_loc('retain')] = 1
-                    recessive_df.iloc[(recessive_df['#CHROM'] == r['#CHROM']) & (recessive_df['POS'] == r['POS']), recessive_df.columns.get_loc('retain')] = 1
+                    recessive_df.iloc[(recessive_df['CHROM'] == r['CHROM']) & (recessive_df['POS'] == r['POS']), recessive_df.columns.get_loc('retain')] = 1
                 else:  # if unphased, retain all variants in gene
                     recessive_df.iloc[(recessive_df['Gene'] == gene), recessive_df.columns.get_loc('retain')] = 1
         # 2 loss of function variants, defined by loeuf score, in trans (if phased)
@@ -272,11 +265,11 @@ def main(in_vcf, pedfile, proband_ID, outdir, loeuf_file, morbidgenes_file, genc
                                 recessive_df['POS'] == r['POS']), recessive_df.columns.get_loc('retain')] = 1
                 else:  # if unphased, retain all variants in gene
                     recessive_df.iloc[(recessive_df['Gene'] == gene), recessive_df.columns.get_loc('retain')] = 1
-        # if not lof, retain if vus or higher, or in HGMD
+        # if not lof, retain if vus or higher
         elif len(gene_df_lofvars) < 1:
-            gene_df_vus_hgmd = gene_df[(gene_df['Clinvar_sig'] >= 1) | (gene_df['hgmd_class'] >= 1) | (gene_df['Morbid_Gene'] == 1)]
-            if len(gene_df_vus_hgmd) >= 1:
-                for i, r in gene_df_vus_hgmd.iterrows():
+            gene_df_vus = gene_df[(gene_df['Clinvar_sig'] >= 1) | (gene_df['Morbid_Gene'] == 1)]
+            if len(gene_df_vus) >= 1:
+                for i, r in gene_df_vus.iterrows():
                     phase = r['Proband_GT']
                     if (phase != '1/0') & (
                             phase != '0/1'):  # if phased, only retain variants in trans with path variant

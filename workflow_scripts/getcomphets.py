@@ -214,7 +214,8 @@ def main():
     with open(in_file, "r") as i:
         vcf_header = i.readlines()
     vcf_header = [line for line in vcf_header if line.startswith('#')]
-    out_header = vcf_header[0:41]
+    header_prefixes = ('##fileformat', '##FILTER', '##INFO=<ID=END', '##FORMAT', '##DeepVariant', '##contig')
+    out_header = [line for line in vcf_header if line.startswith(header_prefixes)]
     # print(out_header)
     out_headerline = [line for line in vcf_header if line.startswith('#CHROM')][0]
     headerline = out_headerline.strip('\n').split('\t')

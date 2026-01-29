@@ -32,8 +32,6 @@ def main():
                         help='Maximum popmax_AF in hprc controls')
     group1.add_argument('-colorsdb_cutoff', type=str, dest='colorsdb_cutoff', required=True,
                         help='Maximum popmax_AF in CoLoRSdb')
-    group1.add_argument('-cdls_cutoff', type=str, dest='cdls_cutoff', required=True,
-                        help='Maximum popmax_AF in control CdLS cohort')
     group1.add_argument('-o', type=str, dest='out_vcf', required=True,
                         help='Output VCF file name')
 
@@ -43,7 +41,6 @@ def main():
     gnomad_cutoff = args.gnomad_cutoff
     hprc_cutoff = args.hprc_cutoff
     colorsdb_cutoff = args.colorsdb_cutoff
-    cdls_cutoff = args.cdls_cutoff
     out_vcf = args.out_vcf
 
     # read in sv files
@@ -57,14 +54,13 @@ def main():
     vcf_df['Gnomad_AF'] = vcf_df['INFO'].str.split('Best_gnomAD_PopMax_AF=').str[1].str.split(';').str[0]
     vcf_df['HPRC_AF'] = vcf_df['INFO'].str.split('Best_HPRC_AF=').str[1].str.split(';').str[0]
     vcf_df['CoLoRSdb_AF'] = vcf_df['INFO'].str.split('Best_CoLoRSdb_AF=').str[1].str.split(';').str[0]
-    vcf_df['CdLS_AF'] = vcf_df['INFO'].str.split('Best_CdLS_AF=').str[1].str.split(';').str[0]
-    vcf_df.fillna({'Gnomad_AF': 0, 'HPRC_AF': 0, 'CoLoRSdb_AF': 0, 'CdLS_AF': 0}, inplace=True)
+    vcf_df.fillna({'Gnomad_AF': 0, 'HPRC_AF': 0, 'CoLoRSdb_AF': 0}, inplace=True)
     pd.set_option('display.max_columns', None)
 
     # filter variants
     # print(vcf_df.shape)
     out_df = vcf_df[(vcf_df['Gnomad_AF'].astype(float) <= float(gnomad_cutoff)) & (vcf_df['HPRC_AF'].astype(float) <= float(hprc_cutoff)) &
-                    (vcf_df['CoLoRSdb_AF'].astype(float) <= float(colorsdb_cutoff)) & (vcf_df['CdLS_AF'].astype(float) <= float(cdls_cutoff))]
+                    (vcf_df['CoLoRSdb_AF'].astype(float) <= float(colorsdb_cutoff))]
 
     # write tsv output
     out_df.to_csv(out_vcf+".tsv", sep='\t', index=False)
