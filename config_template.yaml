@@ -23,9 +23,7 @@ HPRC_database: "hprc_deepvariant_db.vcf.gz"
 gnomad_archive: "/mnt/isilon/rajagopalan_lab/reference/gnomad.v3.1.2.echtvar.v2.zip"
 clinvar_archive: "resources/clinvar.echtvar.zip"
 hprc_archive: "resources/pbhprc.echtvar.zip"
-refseq_gtf: "resources/RefSeqAnnotation/GCF_000001405.40_GRCh38.p14_genomic.chr_replaced.gtf"
-refseq_bed: "resources/RefSeqAnnotation/GCF_000001405.40_GRCh38.p14_genomic.chr_replaced.bed"
-refseq_genes_bed: "resources/RefSeqAnnotation/GCF_000001405.40_GRCh38.p14_genomic.chr_replaced.genes.bed"
+refseq_genes_bed: "resources/GCF_000001405.40_GRCh38.p14_genomic.chr_replaced.genes.bed"
 refseq_cache_dir: "Path to VEP cache dir" # Download the appropriate cache from https://ftp.ensembl.org/pub/release-112/variation/indexed_vep_cache/
 spliceAI_snvarchive: "Path to SpliceAI raw SNV scores vcf file" # Follow instructions for download at http://useast.ensembl.org/info/docs/tools/vep/script/vep_plugins.html
 spliceAI_indelarchive: "Path to SpliceAI raw indel scores vcf file" # Follow instructions for download at http://useast.ensembl.org/info/docs/tools/vep/script/vep_plugins.html
