@@ -81,11 +81,14 @@ To run the WAFL workflow, the following inputs must be specified in the `config.
     ```
     *(Note: Ensure you have Conda installed and configured.)*
 
-2.  **Configuration:**
+2. **Resource Downloads:**
+   Follow instructions in the `config_template.yaml` to download the appropriate publicly available resource files and decompress files where needed. Download remaining annotation resource files from [Zenodo repo](https://zenodo.org/records/18840056). Decompress the tar archive. Populate `resources` folder with all required annotation files and update their paths in `config.yaml`.
+
+3.  **Configuration:**
     *   Copy `config_template.yaml` to `config.yaml`.
     *   Edit `config.yaml` to specify the correct paths for all input files, the sample ID, and any necessary parameters according to your dataset.
 
-3.  **Workflow Execution:**
+4.  **Workflow Execution:**
     The workflow can be executed using Snakemake. It is recommended to use the provided shell scripts for execution, which handle Singularity container usage and job submission.
 
     *   **Local Execution (using `snakemake.script.sh`):**
