@@ -21,7 +21,7 @@ The WAFL workflow performs the following key steps:
 
 3.  **Variant Inheritance and Ranking:**
     *   Identifies compound heterozygous variants by combining SNV/Indel and SV information, considering inheritance patterns (trio, duo, singleton).
-    *   Ranks variants based on multiple evidence sources, including population frequency (gnomAD, HPRC, rCGL), pathogenicity predictions (LoFtool, Revel, CADD, SpliceAI), Clinvar/HGMD annotations, gene constraint (LOEUF, regional constraint), de novo status, and inheritance patterns.
+    *   Ranks variants based on multiple evidence sources, including population frequency (gnomAD, HPRC, CoLoRSdb), pathogenicity predictions (LoFtool, Revel, CADD, SpliceAI), Clinvar/HGMD annotations, gene constraint (LOEUF, regional constraint), de novo status, and inheritance patterns.
     *   Separates variants into dominant and recessive categories based on their predicted inheritance models and pathogenicity features.
 
 4.  **Methylation Analysis:**
