@@ -1,0 +1,27 @@
+name: wafl_env
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - bcftools=1.19
+  - graphviz
+  - jinja2
+  - matplotlib
+  - pip
+  - pygments
+  - samtools=1.19.2
+  - snakemake-minimal[version='>=8.4.4']
+  - bedtools
+  - gh
+  - bedops
+  - methbat
+  - pandas=1.2.3
+  - numpy=1.22.3
+  - pyranges=0.0.95
+  - htslib
+  - zlib
+  - cyvcf2=0.30.4
+  - ncls=0.0.57
+  - python[version='>=3']
+prefix: /home/jadhavt/miniconda3/envs/wafl_env
