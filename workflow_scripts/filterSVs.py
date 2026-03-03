@@ -32,7 +32,9 @@ def main():
                         help='Maximum popmax_AF in hprc controls')
     group1.add_argument('-colorsdb_cutoff', type=str, dest='colorsdb_cutoff', required=True,
                         help='Maximum popmax_AF in CoLoRSdb')
-    group1.add_argument('-o', type=str, dest='out_vcf', required=True,
+    group1.add_argument('-o_vcf', type=str, dest='out_vcf', required=True,
+                        help='Output VCF file name')
+    group1.add_argument('-o_tsv', type=str, dest='out_tsv', required=True,
                         help='Output VCF file name')
 
     args = parser.parse_args()
@@ -42,6 +44,7 @@ def main():
     hprc_cutoff = args.hprc_cutoff
     colorsdb_cutoff = args.colorsdb_cutoff
     out_vcf = args.out_vcf
+    out_tsv = args.out_tsv
 
     # read in sv files
     with open(in_vcf, "r") as i:
@@ -64,7 +67,7 @@ def main():
                     (vcf_df['CoLoRSdb_AF'].astype(float) <= float(colorsdb_cutoff))]
 
     # write tsv output
-    out_df.to_csv(out_vcf+".tsv", sep='\t', index=False)
+    out_df.to_csv(out_tsv+".tsv", sep='\t', index=False)
     out_df = out_df[headerline]
     # print(out_df.shape)
 
