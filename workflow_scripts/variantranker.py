@@ -71,7 +71,7 @@ def createfeaturedf(proband_ID, in_df, sampletype, outdir, loeuf_df, morbidgenes
     in_df['CLNSIG'] = in_df['INFO'].str.split('CLNSIG=').str[1].str.split(';').str[0]
     in_df['CLNDN'] = in_df['INFO'].str.split('CLNDN=').str[1].str.split(';').str[0]
     in_df['CompHet'] = np.where(in_df['INFO'].str.contains('Compound_Heterozygous'), 1, 0)
-    in_df['Homozygous'] = np.where((in_df['Proband_GT'] == '1|1') | (in_df['Proband_GT'] == 1 / 1), 1, 0)
+    in_df['Homozygous'] = np.where((in_df['Proband_GT'] == '1|1') | (in_df['Proband_GT'] == '1/1'), 1, 0)
     in_df['SpliceAI_pred_DS_AG'] = in_df['CSQ'].str.split('|').str[37]
     in_df['SpliceAI_pred_DS_AG'] = pd.to_numeric(in_df['SpliceAI_pred_DS_AG'], errors='coerce')
     in_df['SpliceAI_pred_DS_AL'] = in_df['CSQ'].str.split('|').str[38]
