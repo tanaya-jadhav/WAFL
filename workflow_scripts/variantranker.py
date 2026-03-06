@@ -65,7 +65,6 @@ def createfeaturedf(proband_ID, in_df, sampletype, outdir, loeuf_df, morbidgenes
     in_df['HGVSp'] = in_df['CSQ'].str.split('|').str[11]
     in_df['gnomad_popmax_af'] = in_df['INFO'].str.split('gnomad_popmax_af=').str[1].str.split(';').str[0]
     in_df['hprc_FRQ'] = in_df['INFO'].str.split('hprc_FRQ=').str[1].str.split(';').str[0]
-    in_df['rimgc_FRQ'] = in_df['INFO'].str.split('rimgc_FRQ=').str[1].str.split(';').str[0]
     in_df['Hgmd_class'] = in_df['INFO'].str.split('HGVS_CLASS=').str[1].str.split(';').str[0]
     in_df['Hgmd_rankscore'] = in_df['INFO'].str.split('HGMD_RANKSCORE=').str[1].str.split(';').str[0]
     in_df['CLNSIG'] = in_df['INFO'].str.split('CLNSIG=').str[1].str.split(';').str[0]
@@ -126,21 +125,21 @@ def createfeaturedf(proband_ID, in_df, sampletype, outdir, loeuf_df, morbidgenes
                             'HGVSp', 'gnomad_popmax_af', 'Hgmd_class', 'Hgmd_rankscore', 'CLNSIG', 'CLNDN', 'CompHet',
                             'Homozygous', 'Denovo', 'Dad_GT', 'Mom_GT', 'Revel', 'LoFtool', 'Loeuf_score', 'regional_missense_constraint',
                             'SpliceAI_maxscore', 'SpliceAI_maxtype', 'CADD_PHRED', 'CADD_RAW', 'Morbid_Gene', 'GenCC_Submission',
-                            'Clinvar_path', 'Clinvar_benign', 'Clinvar_vus', 'gnomad_popmax_af', 'hprc_FRQ', 'rimgc_FRQ']]
+                            'Clinvar_path', 'Clinvar_benign', 'Clinvar_vus', 'gnomad_popmax_af', 'hprc_FRQ']]
     elif (sampletype == 'duo_dad') | (sampletype == 'duo_mom'):
         feature_df = in_df[['CHROM', 'POS', 'ID', 'REF', 'ALT', 'Proband_GT', 'Gene', 'Consequence', 'Impact',
                             'Highest_Impact_Order', 'HGVSc',
                             'HGVSp', 'gnomad_popmax_af', 'Hgmd_class', 'Hgmd_rankscore', 'CLNSIG', 'CLNDN', 'CompHet',
                             'Homozygous', 'Denovo', 'Parent_GT', 'Revel', 'LoFtool', 'Loeuf_score', 'regional_missense_constraint', 'SpliceAI_maxscore',
                             'SpliceAI_maxtype', 'CADD_PHRED', 'CADD_RAW', 'Morbid_Gene', 'GenCC_Submission', 'Clinvar_path',
-                            'Clinvar_benign', 'Clinvar_vus', 'gnomad_popmax_af', 'hprc_FRQ', 'rimgc_FRQ']]
+                            'Clinvar_benign', 'Clinvar_vus', 'gnomad_popmax_af', 'hprc_FRQ']]
     else:
         feature_df = in_df[['CHROM', 'POS', 'ID', 'REF', 'ALT', 'Proband_GT', 'Gene', 'Consequence', 'Impact',
                             'Highest_Impact_Order', 'HGVSc',
                             'HGVSp', 'gnomad_popmax_af', 'Hgmd_class', 'Hgmd_rankscore', 'CLNSIG', 'CLNDN', 'CompHet',
                             'Homozygous', 'Denovo', 'Revel', 'LoFtool', 'Loeuf_score', 'regional_missense_constraint', 'SpliceAI_maxscore',
                             'SpliceAI_maxtype', 'CADD_PHRED', 'CADD_RAW', 'Morbid_Gene', 'GenCC_Submission', 'Clinvar_path',
-                            'Clinvar_benign', 'Clinvar_vus', 'gnomad_popmax_af', 'hprc_FRQ', 'rimgc_FRQ']]
+                            'Clinvar_benign', 'Clinvar_vus', 'gnomad_popmax_af', 'hprc_FRQ']]
     feature_df['LoFtool'] = feature_df.LoFtool.replace('', 0, regex=True).astype(float)
     feature_df['SpliceAI_maxscore'] = feature_df.SpliceAI_maxscore.replace('', 0, regex=True).astype(float)
     feature_df['Revel'] = feature_df.Revel.replace('', 0, regex=True).astype(float)
