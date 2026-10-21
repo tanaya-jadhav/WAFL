@@ -214,7 +214,7 @@ def main():
     with open(in_file, "r") as i:
         vcf_header = i.readlines()
     vcf_header = [line for line in vcf_header if line.startswith('#')]
-    header_prefixes = ('##fileformat', '##FILTER', '##INFO=<ID=END', '##FORMAT', '##DeepVariant', '##contig')
+    header_prefixes = ('##fileformat', '##FILTER', '##INFO=<ID=END', '##FORMAT', '##DeepVariant', '##contig', '##INFO=<ID=CSQ')
     out_header = [line for line in vcf_header if line.startswith(header_prefixes)]
     # print(out_header)
     out_headerline = [line for line in vcf_header if line.startswith('#CHROM')][0]
@@ -231,7 +231,9 @@ def main():
         sampletype = 'singleton'
     print('Sample is a ' + sampletype)
     pd.set_option('display.max_columns', 500)
-    vcf_df = pd.read_csv(in_file, sep='\t', comment="#", header=None, names=headerline)
+    # skip ## meta lines instead of using comment="#", which truncates lines with '#' inside INFO (e.g. ClinVar CLNVI)
+    n_meta = sum(1 for line in vcf_header if line.startswith('##'))
+    vcf_df = pd.read_csv(in_file, sep='\t', skiprows=n_meta, header=0, dtype=str)
     vcf_df = vcf_df[vcf_df['FILTER'] == 'PASS'].reset_index()  # for variants with PASS only
     vcf_df['CSQ'] = vcf_df['INFO'].str.split('CSQ=').str[1]
     vcf_df['Gene'] = vcf_df['CSQ'].str.split('|').str[3]
